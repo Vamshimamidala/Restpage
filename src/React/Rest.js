@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode'; // Updated to named import
+import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
@@ -16,17 +16,30 @@ const ResetPassword = () => {
       setIsTokenValid(false);
       return;
     }
-    
+
+    let intervalId;
     try {
       const decodedToken = jwtDecode(token);
-      if (decodedToken.exp * 1000 < Date.now()) {
+      const expirationTime = decodedToken.exp * 1000;
+
+      if (expirationTime < Date.now()) {
         setError("Token has expired. Please request a new password reset link.");
         setIsTokenValid(false);
+      } else {
+        intervalId = setInterval(() => {
+          if (expirationTime < Date.now()) {
+            setError("Token has expired. Please request a new password reset link.");
+            setIsTokenValid(false);
+            clearInterval(intervalId); // Stop checking after expiration
+          }
+        }, 1000); // Check every second
       }
     } catch (err) {
       setError("Invalid token. Please request a new password reset link.");
       setIsTokenValid(false);
     }
+
+    return () => clearInterval(intervalId); // Clean up on unmount
   }, [token]);
 
   const handleSubmit = async () => {
