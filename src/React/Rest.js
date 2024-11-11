@@ -18,7 +18,7 @@ const Rest = () => {
     }
 
     try {
-      const response = await axios.post('https://test-4-d4mt.onrender.com/api/reset-password', { password });
+      const response = await axios.post('https://test-4-d4mt.onrender.com', { password });
       if (response.status === 200) {
         alert("Password reset successfully!");
       }
