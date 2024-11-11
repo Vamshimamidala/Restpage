@@ -36,7 +36,7 @@ const ResetPassword = () => {
     }
 
     try {
-      await axios.post(`https://test-2-hbup.onrender.comgit init/reset-password/${token}`, { newPassword: password, confirmPassword });
+      await axios.post(`https://test-3-zyku.onrender.com/reset-password/${token}`, { newPassword: password, confirmPassword });
       alert("Password reset successfully!");
     } catch (error) {
       if (error.response && error.response.data.msg) {
